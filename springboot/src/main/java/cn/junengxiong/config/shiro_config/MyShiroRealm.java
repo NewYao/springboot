@@ -12,22 +12,26 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.context.annotation.Bean;
 
 import cn.junengxiong.bean.User;
-import cn.junengxiong.service.UserService;
 
 public class MyShiroRealm extends AuthorizingRealm {
 
-    @Autowired
-    private UserService userService;
-
+    @Bean
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
+        creator.setProxyTargetClass(true);
+        return creator;
+    }
     /**
-     * 权限验证
+     * 权限设置
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         System.out.println("AuthenticationInfo-doGetAuthorizationInfo");
+        System.out.println("进入自定义权限设置方法！");
         String username = (String)principals.getPrimaryPrincipal();
         //从数据库或换村中获取用户角色信息
         User  user = findByUsername(username);
@@ -60,6 +64,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         System.out.println("AuthenticationInfo-doGetAuthenticationInfo");
+        System.out.println("进入自定义登录验证方法！");
         // 通过username从数据库中查找 User对象，如果找到，没找到.
         // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
         String username = (String) token.getPrincipal();

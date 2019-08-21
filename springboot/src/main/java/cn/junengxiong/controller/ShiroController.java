@@ -22,7 +22,7 @@ public class ShiroController {
         return str;
     }
     @RequiresRoles("admin")
-    @RequiresPermissions("delete")
+    @RequiresPermissions("user:delete")
     @GetMapping("/admin/{str}")
     public String getMessageAdmin(@PathVariable(value="str") String str) {
         return str;
