@@ -55,5 +55,3 @@ mybatis:
     mapper-locations: classpath*:mapping/*Mapper.xml
 #指定实体类包名
     type-aliases-package: cn.junengxiong.bean
-        
-        

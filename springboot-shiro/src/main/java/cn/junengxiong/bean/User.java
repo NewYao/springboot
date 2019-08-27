@@ -1,6 +1,5 @@
 package cn.junengxiong.bean;
 
-import java.util.List;
 import java.util.Set;
 
 public class User {
