@@ -3,16 +3,23 @@ package cn.junengxiong.config.shiro_config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class ShiroConfig {
+    //remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
+    private static final String ENCRYPTION_KEY = "3AvVhmFLUs0KTA3Kprsdag==";
+    
     @Bean
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -47,7 +54,7 @@ public class ShiroConfig {
     @Bean
     public MyShiroRealm myShiroRealm() {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
-        return myShiroRealm;
+        return  myShiroRealm;
     }
     /**
      * 注入 securityManager
@@ -56,9 +63,32 @@ public class ShiroConfig {
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myShiroRealm());
+        securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
-    
+    /**
+     * Cookie 对象
+     * @return
+     */
+    public SimpleCookie rememMeCookie(){
+        //初始化设置cookie的名称
+        SimpleCookie simpleCookie = new SimpleCookie("boot-shiro");
+        simpleCookie.setMaxAge(2592000);//设置cookie的生效时间
+        simpleCookie.setHttpOnly(true);
+        return simpleCookie;
+    }
+ 
+    /**
+     * cookie 管理对象，记住我功能
+     * @return
+     */
+    public CookieRememberMeManager rememberMeManager(){
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememMeCookie());
+        //remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
+        cookieRememberMeManager.setCipherKey(Base64.decode(ENCRYPTION_KEY));
+        return cookieRememberMeManager;
+    }
     
     /**
      *  开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证

@@ -21,18 +21,19 @@ public class UserServiceImpl implements UserService {
         switch (username) {
         case "admin":
             roleList.add("admin");
-            permissionsList.add("admin");
+            permissionsList.add("user:add");
             break;
         case "consumer":
             roleList.add("consumer");
-            permissionsList.add("consumer");
+            permissionsList.add("consumer:*");
             break;
         default:
             roleList.add("guest");
-            permissionsList.add("guest");
+            permissionsList.add("guest:query");
             break;
         }
         user.setRole(roleList);
+        user.setPermission(permissionsList);
         return user;
     }
 

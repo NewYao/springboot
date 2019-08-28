@@ -1,5 +1,4 @@
 package cn.junengxiong.controller;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -11,9 +10,9 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +29,7 @@ public class ShiroController {
     }
 
     @RequiresRoles("admin")
-    @RequiresPermissions("user:delete")
+    @RequiresPermissions("user:add")
     @RequestMapping("/admin/{str}")
     public ReturnMap getMessageAdmin(@PathVariable(value = "str") String str) {
         return new ReturnMap().success().data(str);
@@ -41,11 +40,11 @@ public class ShiroController {
         return new ReturnMap().success().data(str);
     }
 
-    @PostMapping("/login")
-    public ReturnMap login(String username) {
+    @RequestMapping("/login")
+    public ReturnMap login(String username , @Value("true")Boolean RememberMe) {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, username);
-        token.setRememberMe(true);
+        token.setRememberMe(RememberMe);
         subject.login(token);
         return new ReturnMap().success().data("登录成功！");
     }
@@ -54,7 +53,8 @@ public class ShiroController {
     public ReturnMap getMessageGuest() {
         Subject subject = SecurityUtils.getSubject();
         try {
-            subject.logout();
+                //登出
+                subject.logout();
             } catch ( UnknownAccountException uae ) { 
                 //用户名未知...
                 return new ReturnMap().fail().message("用户不存在！");
