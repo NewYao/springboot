@@ -14,12 +14,11 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class ShiroConfig {
-    //remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
+    // remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
     private static final String ENCRYPTION_KEY = "3AvVhmFLUs0KTA3Kprsdag==";
-    
+
     @Bean
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -35,27 +34,32 @@ public class ShiroConfig {
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
         filterChainDefinitionMap.put("/**", "authc");
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面,前后端分离设置此为controller返回的未登录的接口
-        shiroFilterFactoryBean.setLoginUrl("/login.html");
-        // 登录成功后跳转的链接,前后端分离设置
-        //shiroFilterFactoryBean.setSuccessUrl("/index");
+        // --------------------------------------------------
+        // 前后端分离使用下面设置
+       shiroFilterFactoryBean.setLoginUrl("/login.html");
+       //shiroFilterFactoryBean.setLoginUrl("/unauthorized");
+        // ---------------------------------------------------
+        // 登录成功后跳转的链接,前后端分离不用设置
+        // shiroFilterFactoryBean.setSuccessUrl("/index");
 
         // 未授权的界面
-        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
     }
+
     /**
      * 自定义身份认证 realm;
      * <p>
-     * 必须写这个类，并加上 @Bean 注解，目的是注入 MyShiroRealm，
-     * 否则会影响 MyShiroRealm类 中其他类的依赖注入
+     * 必须写这个类，并加上 @Bean 注解，目的是注入 MyShiroRealm， 否则会影响 MyShiroRealm类 中其他类的依赖注入
      */
     @Bean
     public MyShiroRealm myShiroRealm() {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
-        return  myShiroRealm;
+        return myShiroRealm;
     }
+
     /**
      * 注入 securityManager
      */
@@ -66,44 +70,60 @@ public class ShiroConfig {
         securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
+
     /**
      * Cookie 对象
+     * 
      * @return
      */
-    public SimpleCookie rememMeCookie(){
-        //初始化设置cookie的名称
+    public SimpleCookie rememMeCookie() {
+        // 初始化设置cookie的名称
         SimpleCookie simpleCookie = new SimpleCookie("boot-shiro");
-        simpleCookie.setMaxAge(2592000);//设置cookie的生效时间
+        simpleCookie.setMaxAge(2592000);// 设置cookie的生效时间
         simpleCookie.setHttpOnly(true);
         return simpleCookie;
     }
- 
+
     /**
      * cookie 管理对象，记住我功能
+     * 
      * @return
      */
-    public CookieRememberMeManager rememberMeManager(){
+    public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememMeCookie());
-        //remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
+        // remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
         cookieRememberMeManager.setCipherKey(Base64.decode(ENCRYPTION_KEY));
         return cookieRememberMeManager;
     }
-    
+
     /**
-     *  开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
+     * 配置Shiro生命周期处理器,在此说明，如果配合spring食用时，是无需配置此项的，可以查看
+     * shiro-spring-config.ShiroBeanConfiguration文件，此配置已经帮我们配置好了
+     * 
+     * @return
+     */
+//    @Bean(name = "lifecycleBeanPostProcessor")
+//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
+
+    /**
+     * 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
      * 配置以下两个bean(DefaultAdvisorAutoProxyCreator和AuthorizationAttributeSourceAdvisor)即可实现此功能
+     * 
      * @return
      */
     @Bean
-    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         advisorAutoProxyCreator.setProxyTargetClass(true);
         return advisorAutoProxyCreator;
     }
-  
+
     /**
      * 开启aop注解支持
+     * 
      * @param securityManager
      * @return
      */

@@ -73,4 +73,13 @@ public class ShiroController {
             }
         return new ReturnMap().success().message("登出成功！");
     }
+    
+    /**
+     * 无权限访问时
+     * @return
+     */
+    @RequestMapping("/unauthorized")
+    public ReturnMap unauthorized() {
+        return new ReturnMap().invalid();
+    }
 }
