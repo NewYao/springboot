@@ -14,21 +14,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         User user = new User();
-        user.setPassword(username);
         user.setUsername(username);
         Set<String> roleList = new HashSet<>();
         Set<String> permissionsList = new HashSet<>();
         switch (username) {
         case "admin":
             roleList.add("admin");
-            permissionsList.add("user:add");
+            user.setPassword("admin");
+            permissionsList.add("admin:all");
             break;
         case "consumer":
             roleList.add("consumer");
-            permissionsList.add("consumer:*");
+            permissionsList.add("consumer:add");
+            user.setPassword("consumer");
             break;
         default:
             roleList.add("guest");
+            user.setPassword("guest");
             permissionsList.add("guest:query");
             break;
         }

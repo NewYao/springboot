@@ -41,11 +41,29 @@ public class ShiroController {
     }
 
     @RequestMapping("/login")
-    public ReturnMap login(String username , @Value("true")Boolean RememberMe) {
+    public ReturnMap login(String username , @Value("false")Boolean rememberMe,String password) {
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, username);
-        token.setRememberMe(RememberMe);
-        subject.login(token);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        token.setRememberMe(rememberMe);
+        try {
+            //登录
+            subject.login(token);
+        } catch ( UnknownAccountException uae ) { 
+            //用户名未知...
+            return new ReturnMap().fail().message("用户不存在！");
+        } catch ( IncorrectCredentialsException ice ) {
+            //凭据不正确，例如密码不正确 ...
+            return new ReturnMap().fail().message("密码不正确！");
+        } catch ( LockedAccountException lae ) { 
+            //用户被锁定，例如管理员把某个用户禁用...
+            return new ReturnMap().fail().message("用户被锁定！");
+        } catch ( ExcessiveAttemptsException eae ) {
+            //尝试认证次数多余系统指定次数 ...
+            return new ReturnMap().fail().message("尝试认证次数过多，请稍后重试！");
+        } catch ( AuthenticationException ae ) {
+            //其他未指定异常
+            return new ReturnMap().fail().message("未知异常！");                
+        }
         return new ReturnMap().success().data("登录成功！");
     }
 

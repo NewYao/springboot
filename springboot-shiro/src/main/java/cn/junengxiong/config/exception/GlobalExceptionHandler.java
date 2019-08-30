@@ -45,39 +45,7 @@ public class GlobalExceptionHandler {
         return new ReturnMap().fail().message(e.getMessage());
     }
 
-    /**
-     * 处理所有接口数据验证异常
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    ReturnMap handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
-
-        LOGGER.error("参数验证失败！", e);
-        LOGGER.error(e.getMessage(), e);
-
-        String validate_message="";
-        for (ObjectError error : e.getBindingResult().getAllErrors()) {
-            validate_message+=error.getDefaultMessage()+"<br/>";
-        }
-        return new ReturnMap().fail().message(validate_message);
-    }
-
-
-    @ExceptionHandler(BindException.class)
-    @ResponseBody
-    ReturnMap handleBindException(BindException e) {
-        LOGGER.error("参数绑定失败！", e);
-        LOGGER.error(e.getMessage(), e);
-
-        String validate_message="";
-        for (ObjectError error : e.getBindingResult().getAllErrors()) {
-            validate_message+=error.getDefaultMessage()+"<br/>";
-        }
-        return new ReturnMap().fail().message(validate_message);
-    }
-
+  
     
     // 捕捉shiro的异常
     @ExceptionHandler(ShiroException.class)

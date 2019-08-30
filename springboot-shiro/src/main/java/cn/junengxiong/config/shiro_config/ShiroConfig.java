@@ -36,8 +36,8 @@ public class ShiroConfig {
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面,前后端分离设置此为controller返回的未登录的接口
         // --------------------------------------------------
         // 前后端分离使用下面设置
-       shiroFilterFactoryBean.setLoginUrl("/login.html");
-       //shiroFilterFactoryBean.setLoginUrl("/unauthorized");
+        shiroFilterFactoryBean.setLoginUrl("/login.html");
+        // shiroFilterFactoryBean.setLoginUrl("/unauthorized");
         // ---------------------------------------------------
         // 登录成功后跳转的链接,前后端分离不用设置
         // shiroFilterFactoryBean.setSuccessUrl("/index");
@@ -59,7 +59,8 @@ public class ShiroConfig {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
         return myShiroRealm;
     }
-
+    
+    
     /**
      * 注入 securityManager
      */
@@ -70,10 +71,10 @@ public class ShiroConfig {
         securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
-
+    
     /**
      * Cookie 对象
-     * 
+     * 用户免登陆操作，但是需要配置filter /** 权限为user生效
      * @return
      */
     public SimpleCookie rememMeCookie() {
