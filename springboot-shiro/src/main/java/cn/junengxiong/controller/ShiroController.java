@@ -23,13 +23,14 @@ import cn.junengxiong.bean.ReturnMap;
 public class ShiroController {
 
     @RequiresRoles(value = { "admin", "consumer" }, logical = Logical.OR)
+    @RequiresPermissions("consumer:add")
     @RequestMapping("/consumer/{str}")
     public ReturnMap getMessage(@PathVariable(value = "str") String str) {
         return new ReturnMap().success().data(str);
     }
 
     @RequiresRoles("admin")
-    @RequiresPermissions("user:add")
+    @RequiresPermissions("user:all")
     @RequestMapping("/admin/{str}")
     public ReturnMap getMessageAdmin(@PathVariable(value = "str") String str) {
         return new ReturnMap().success().data(str);

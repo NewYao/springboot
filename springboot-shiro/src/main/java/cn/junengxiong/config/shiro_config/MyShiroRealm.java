@@ -14,7 +14,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import cn.junengxiong.bean.User;
 import cn.junengxiong.service.UserService;
@@ -71,7 +70,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
         String username = usernamePasswordToken.getUsername();
-        String pwd = usernamePasswordToken.getPassword().toString();//获取用户输入的密码
+        String pwd = String.valueOf(usernamePasswordToken.getPassword());//获取用户输入的密码
         User user = userService.findByUsername(username);
         if (user == null)
             throw new UnknownAccountException();// 用户不存在
