@@ -1,5 +1,5 @@
 # springboot 整合Shiro
-![](https://img.shields.io/badge/SpringBoot-2.0.4-brightgreen.svg) ![](https://img.shields.io/badge/Shiro-1.4-brightblue.svg)
+![](https://img.shields.io/badge/SpringBoot-2.0.4-brightgreen.svg)![](https://img.shields.io/badge/Shiro-1.4-brightgreen.svg)
 ##### 参考资源
  - [教你 Shiro 整合 SpringBoot，避开各种坑
 ](https://blog.csdn.net/weixin_38132621/article/details/80216056)
