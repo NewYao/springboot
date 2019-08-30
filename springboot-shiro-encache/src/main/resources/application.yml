@@ -1,0 +1,5 @@
+server:
+    port: 8888
+    servlet:
+    # 项目访问前缀
+        context-path: /
