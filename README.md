@@ -1,4 +1,5 @@
 # springboot
 springboot 整合多个组件
 
-- [SpringBoot+Shiro](https://github.com/NewYao/springboot/tree/master/springboot-shiro) SpringBoot和shiro最简整合配置。
+- [SpringBoot+Shiro](https://github.com/NewYao/springboot/tree/master/springboot-shiro)
+- [SpringBoot+Shiro+ehCache](https://github.com/NewYao/springboot/tree/master/springboot-shiro-encache)
