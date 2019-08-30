@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
             break;
         case "consumer":
             roleList.add("consumer");
-            permissionsList.add("consumer:add");
+            permissionsList.add("consumer:a");
             user.setPassword("consumer");
             break;
         default:
