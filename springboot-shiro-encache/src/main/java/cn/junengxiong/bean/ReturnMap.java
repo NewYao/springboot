@@ -12,7 +12,6 @@ import java.util.HashMap;
  * @Date 2018-02-26
  * @Time 16:03
  */
-@Component
 public class ReturnMap extends HashMap<String, Object> {
 	/**
 	 * 

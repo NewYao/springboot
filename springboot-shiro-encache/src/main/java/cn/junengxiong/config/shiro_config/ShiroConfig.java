@@ -1,12 +1,10 @@
 package cn.junengxiong.config.shiro_config;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
-import org.apache.shiro.io.ResourceUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -89,6 +87,7 @@ public class ShiroConfig {
 	public EhCacheManager ehCacheManager() {
 		net.sf.ehcache.CacheManager cacheManager = net.sf.ehcache.CacheManager.getCacheManager("ehcache");
 		EhCacheManager em = new EhCacheManager();
+		//因为配合springboot热启动，所以注入bean时加上此判断，不然会报错
 		if (ObjectUtils.isEmpty(cacheManager)) {
 			em.setCacheManagerConfigFile("classpath:ehcache.xml");
 		} else {
