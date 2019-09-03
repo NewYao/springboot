@@ -10,6 +10,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,8 @@ import cn.junengxiong.bean.ReturnMap;
 @Controller
 @RestController
 public class ShiroController {
-
+    
+    
     @RequestMapping("/consumer/{str}")
     @RequiresRoles(value = { "admin", "consumer" }, logical = Logical.OR)
     @RequiresPermissions(value= {"consumer:all","admin:all"},logical = Logical.OR)
@@ -101,4 +103,6 @@ public class ShiroController {
     public ReturnMap unauthorized() {
         return new ReturnMap().invalid();
     }
+    
+    
 }
