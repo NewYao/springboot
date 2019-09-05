@@ -30,14 +30,16 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login", "anon");
         // 配置退出 过滤器，其中具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
-        // <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，注意
+        //因为目前演示页面依附在此项目下，特为演示页面新增可无权限访问，前后端分离后无需此设置
+        filterChainDefinitionMap.put("/login.html", "anon");
+        // <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->因为保存在LinkedHashMap中，顺序很重要
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
         filterChainDefinitionMap.put("/**", "authc");//设置/**  为user后，记住我才会生效
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面,前后端分离设置此为controller返回的未登录的接口
         // --------------------------------------------------
         // 前后端分离使用下面设置
-        shiroFilterFactoryBean.setLoginUrl("/login.html");
-        // shiroFilterFactoryBean.setLoginUrl("/unauthorized");
+        //shiroFilterFactoryBean.setLoginUrl("/login.html");
+        shiroFilterFactoryBean.setLoginUrl("/unauthorized");//前后端分离只需要把需要登录返回告诉前端页面即可
         // ---------------------------------------------------
         // 登录成功后跳转的链接,前后端分离不用设置
         // shiroFilterFactoryBean.setSuccessUrl("/index");
@@ -57,10 +59,15 @@ public class ShiroConfig {
     @Bean
     public MyShiroRealm myShiroRealm() {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
+        //设置密码比较器
+        //myShiroRealm.setCredentialsMatcher(myCredentialsMatcher());
         return myShiroRealm;
     }
-    
-    
+    @Bean
+    public MyCredentialsMatcher myCredentialsMatcher() {
+        MyCredentialsMatcher mtm = new MyCredentialsMatcher();
+        return mtm;
+    }
     /**
      * 注入 securityManager
      */

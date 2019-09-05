@@ -23,67 +23,140 @@ import cn.junengxiong.bean.ReturnMap;
 @RestController
 public class ShiroController {
 
-	@RequestMapping("/consumer/{str}")
-	@RequiresRoles(value = { "admin", "consumer" }, logical = Logical.OR)
-	@RequiresPermissions(value = { "consumer:all", "admin:all" }, logical = Logical.OR)
-	public ReturnMap getMessage(@PathVariable(value = "str") String str) {
-		return new ReturnMap().success().data(str);
-	}
+    @RequestMapping("/consumer/{str}")
+    @RequiresRoles(value = { "admin", "consumer" }, logical = Logical.OR)
+    @RequiresPermissions(value= {"consumer:all","admin:all"},logical = Logical.OR)
+    public ReturnMap getMessage(@PathVariable(value = "str") String str) {
+        return new ReturnMap().success().data(str);
+    }
+    @RequestMapping("/consumer/{str}")
+    @RequiresRoles(value = { "admin", "consumer" ,"superman"}, logical = Logical.OR)
+    public ReturnMap getMessage(@PathVariable(value = "str") String str) {
+        return new ReturnMap().success().data(str);
+    }
 
-	@RequestMapping("/admin/{str}")
-	@RequiresRoles("admin")
-	@RequiresPermissions("admin:all")
-	public ReturnMap getMessageAdmin(@PathVariable(value = "str") String str) {
-		return new ReturnMap().success().data(str);
-	}
 
-	@RequestMapping("/guest/{str}")
-	public ReturnMap getMessageGuest(@PathVariable(value = "str") String str) {
-		return new ReturnMap().success().data(str);
-	}
+    @RequestMapping("/admin/{str}")
+    @RequiresRoles("admin")
+    @RequiresPermissions("admin:all")
+    public ReturnMap getMessageAdmin(@PathVariable(value = "str") String str) {
+        return new ReturnMap().success().data(str);
+    }
+    @RequestMapping("/admin/{str}")
+    @RequiresRoles("admin")
+    public ReturnMap getMessageAdmin(@PathVariable(value = "str") String str) {
+        return new ReturnMap().success().data(str);
+    }
 
-	@RequestMapping("/login")
-	public ReturnMap login(String username, @Value("false") Boolean rememberMe, String password) {
-		Subject subject = SecurityUtils.getSubject();
-		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-		token.setRememberMe(rememberMe);
-		try {
-			// 登录
-			subject.login(token);
-		} catch (UnknownAccountException uae) {
-			// 用户名未知...
-			return new ReturnMap().fail().message("用户不存在！");
-		} catch (IncorrectCredentialsException ice) {
-			// 凭据不正确，例如密码不正确 ...
-			return new ReturnMap().fail().message("密码不正确！");
-		} catch (LockedAccountException lae) {
-			// 用户被锁定，例如管理员把某个用户禁用...
-			return new ReturnMap().fail().message("用户被锁定！");
-		} catch (ExcessiveAttemptsException eae) {
-			// 尝试认证次数多余系统指定次数 ...
-			return new ReturnMap().fail().message("尝试认证次数过多，请稍后重试！");
-		} catch (AuthenticationException ae) {
-			// 其他未指定异常
-			return new ReturnMap().fail().message("未知异常！");
-		}
-		return new ReturnMap().success().data("登录成功！");
-	}
 
-	@RequestMapping("/loginout")
-	public ReturnMap getMessageGuest() {
-		Subject subject = SecurityUtils.getSubject();
-		// 登出
-		subject.logout();
-		return new ReturnMap().success().message("登出成功！");
-	}
+    @RequestMapping("/guest/{str}")
+    public ReturnMap getMessageGuest(@PathVariable(value = "str") String str) {
+        return new ReturnMap().success().data(str);
+    }
 
-	/**
-	 * 无权限访问时
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/unauthorized")
-	public ReturnMap unauthorized() {
-		return new ReturnMap().invalid();
-	}
+    @RequestMapping("/login")
+    public ReturnMap login(String username , @Value("false")Boolean rememberMe,String password) {
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        token.setRememberMe(rememberMe);
+        try {
+            //登录
+            subject.login(token);
+        } catch ( UnknownAccountException uae ) { 
+            //用户名未知...
+            return new ReturnMap().fail().message("用户不存在！");
+        } catch ( IncorrectCredentialsException ice ) {
+            //凭据不正确，例如密码不正确 ...
+            return new ReturnMap().fail().message("密码不正确！");
+        } catch ( LockedAccountException lae ) { 
+            //用户被锁定，例如管理员把某个用户禁用...
+            return new ReturnMap().fail().message("用户被锁定！");
+        } catch ( ExcessiveAttemptsException eae ) {
+            //尝试认证次数多余系统指定次数 ...
+            return new ReturnMap().fail().message("尝试认证次数过多，请稍后重试！");
+        } catch ( AuthenticationException ae ) {
+            //其他未指定异常
+            return new ReturnMap().fail().message("未知异常！");                
+        }
+        return new ReturnMap().success().data("登录成功！");
+    }
+    @RequestMapping("/login")
+    public ReturnMap login(String username, Boolean rememberMe, String password) {
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        if (rememberMe != null) {
+            token.setRememberMe(rememberMe);
+        }
+        try {
+            // 登录
+            subject.login(token);
+        } catch (UnknownAccountException uae) {
+            // 用户名未知...
+            return new ReturnMap().fail().message("用户不存在！");
+        } catch (IncorrectCredentialsException ice) {
+            // 凭据不正确，例如密码不正确 ...
+            return new ReturnMap().fail().message("密码不正确！");
+        } catch (LockedAccountException lae) {
+            // 用户被锁定，例如管理员把某个用户禁用...
+            return new ReturnMap().fail().message("用户被锁定！");
+        } catch (ExcessiveAttemptsException eae) {
+            // 尝试认证次数多余系统指定次数 ...
+            return new ReturnMap().fail().message("尝试认证次数过多，请稍后重试！");
+        } catch (AuthenticationException ae) {
+            // 其他未指定异常
+            return new ReturnMap().fail().message("未知异常！");
+        }
+        return new ReturnMap().success().data("登录成功！");
+    }
+
+    @RequestMapping("/loginout")
+    public ReturnMap getMessageGuest() {
+        Subject subject = SecurityUtils.getSubject();
+        try {
+                //登出
+                subject.logout();
+            } catch ( UnknownAccountException uae ) { 
+                //用户名未知...
+                return new ReturnMap().fail().message("用户不存在！");
+            } catch ( IncorrectCredentialsException ice ) {
+                //凭据不正确，例如密码不正确 ...
+                return new ReturnMap().fail().message("密码不正确！");
+            } catch ( LockedAccountException lae ) { 
+                //用户被锁定，例如管理员把某个用户禁用...
+                return new ReturnMap().fail().message("用户被锁定！");
+            } catch ( ExcessiveAttemptsException eae ) {
+                //尝试认证次数多余系统指定次数 ...
+                return new ReturnMap().fail().message("尝试认证次数过多，请稍后重试！");
+            } catch ( AuthenticationException ae ) {
+                //其他未指定异常
+                return new ReturnMap().fail().message("未知异常！");                
+            }
+        return new ReturnMap().success().message("登出成功！");
+    }
+    
+    /**
+     * 无权限访问时
+     * @return
+     */
+    @RequestMapping("/unauthorized")
+    public ReturnMap unauthorized() {
+        return new ReturnMap().invalid();
+    }
+    @RequestMapping("/loginout")
+    public ReturnMap getMessageGuest() {
+        Subject subject = SecurityUtils.getSubject();
+        // 登出
+        subject.logout();
+        return new ReturnMap().success().message("登出成功！");
+    }
+
+    /**
+     * 无权限访问时
+     * 
+     * @return
+     */
+    @RequestMapping("/unauthorized")
+    public ReturnMap unauthorized() {
+        return new ReturnMap().invalid();
+    }
 }
