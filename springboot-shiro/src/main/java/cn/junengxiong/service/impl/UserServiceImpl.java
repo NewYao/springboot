@@ -21,17 +21,17 @@ public class UserServiceImpl implements UserService {
         case "admin":
             roleList.add("admin");
             user.setPassword("admin");
-            permissionsList.add("admin:all");
+            permissionsList.add("user:add");
+            permissionsList.add("user:delete");
             break;
         case "consumer":
             roleList.add("consumer");
-            permissionsList.add("consumer:a");
             user.setPassword("consumer");
+            permissionsList.add("consumer:modify");
             break;
         default:
             roleList.add("guest");
             user.setPassword("guest");
-            permissionsList.add("guest:query");
             break;
         }
         user.setRole(roleList);

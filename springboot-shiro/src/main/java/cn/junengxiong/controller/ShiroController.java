@@ -20,7 +20,7 @@ import cn.junengxiong.bean.ReturnMap;
 public class ShiroController {
 
     @RequestMapping("/consumer/{str}")
-    @RequiresRoles(value = { "admin", "consumer" }, logical = Logical.OR)
+    @RequiresRoles(value = { "admin", "consumer" ,"superman"}, logical = Logical.OR)
     public ReturnMap getMessage(@PathVariable(value = "str") String str) {
         return new ReturnMap().success().data(str);
     }

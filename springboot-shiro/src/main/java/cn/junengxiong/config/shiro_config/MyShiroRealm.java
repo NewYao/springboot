@@ -73,17 +73,19 @@ public class MyShiroRealm extends AuthorizingRealm {
         String username = usernamePasswordToken.getUsername();
         String pwd = String.valueOf(usernamePasswordToken.getPassword());// 获取用户输入的密码
         User user = userService.findByUsername(username);
-        if (user == null)
+        if (user == null) {
             throw new UnknownAccountException();// 用户不存在
+        }
         String password = user.getPassword();// 数据库获取的密码
         // 此处对用户输入密码进行加密，对比数据库查询出来加密后的密码，自定义加密方式
         // ............................
+        // password = new SimpleHash("MD5", password, username, 1024).toString();
         if (!password.equals(pwd)) {
             throw new IncorrectCredentialsException();// 凭证错误
         }
         // 主要的（可以使用户名，也可以是用户对象），资格证书(数据库获取的密码)，区域名称（当前realm名称）
         SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(username, password, getName());
-        // 加盐,使用每个用户各自的用户名加盐，保证密码相同时但是加密后密码仍然不同,如果不适用shiro自带凭证比较器，可以不设置加盐（个人猜想）
+        // 加盐,使用每个用户各自的用户名加盐，保证密码相同时但是加密后密码仍然不同,如果不适用shiro自带凭证比较器，或者自定义凭证比较器，可以不设置加盐
         // simpleAuthenticationInfo.setCredentialsSalt(ByteSource.Util.bytes(username));
         return simpleAuthenticationInfo;
     }

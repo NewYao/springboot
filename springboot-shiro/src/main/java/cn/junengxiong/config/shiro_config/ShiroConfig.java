@@ -59,10 +59,15 @@ public class ShiroConfig {
     @Bean
     public MyShiroRealm myShiroRealm() {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
+        //设置密码比较器
+        //myShiroRealm.setCredentialsMatcher(myCredentialsMatcher());
         return myShiroRealm;
     }
-    
-    
+    @Bean
+    public MyCredentialsMatcher myCredentialsMatcher() {
+        MyCredentialsMatcher mtm = new MyCredentialsMatcher();
+        return mtm;
+    }
     /**
      * 注入 securityManager
      */
