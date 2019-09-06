@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
             break;
         default:
             roleList.add("guest");
-            user.setPassword("guest");
+            user.setPassword("565dd969076eef0ac3f9d49aa61e9489");
             break;
         }
         user.setRole(roleList);

@@ -3,16 +3,16 @@ package cn.junengxiong.config.shiro_config;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
-public class MyCredentialsMatcher extends SimpleCredentialsMatcher {
+public class MyCredentialsMatcher extends HashedCredentialsMatcher {
 
     /**
      * 重写密码验证器
      * 
-     * @param token
-     * @param info
+     * @param token 用户输入的信息
+     * @param info  数据库查询到的信息
      */
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {

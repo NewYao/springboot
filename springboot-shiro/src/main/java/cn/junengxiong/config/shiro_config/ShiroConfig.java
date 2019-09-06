@@ -3,6 +3,8 @@ package cn.junengxiong.config.shiro_config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -30,16 +32,16 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login", "anon");
         // 配置退出 过滤器，其中具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
-        //因为目前演示页面依附在此项目下，特为演示页面新增可无权限访问，前后端分离后无需此设置
+        // 因为目前演示页面依附在此项目下，特为演示页面新增可无权限访问，前后端分离后无需此设置
         filterChainDefinitionMap.put("/login.html", "anon");
         // <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->因为保存在LinkedHashMap中，顺序很重要
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-        filterChainDefinitionMap.put("/**", "authc");//设置/**  为user后，记住我才会生效
+        filterChainDefinitionMap.put("/**", "authc");// 设置/** 为user后，记住我才会生效
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面,前后端分离设置此为controller返回的未登录的接口
         // --------------------------------------------------
         // 前后端分离使用下面设置
-        //shiroFilterFactoryBean.setLoginUrl("/login.html");
-        shiroFilterFactoryBean.setLoginUrl("/unauthorized");//前后端分离只需要把需要登录返回告诉前端页面即可
+        // shiroFilterFactoryBean.setLoginUrl("/login.html");
+        shiroFilterFactoryBean.setLoginUrl("/unauthorized");// 前后端分离只需要把需要登录返回告诉前端页面即可
         // ---------------------------------------------------
         // 登录成功后跳转的链接,前后端分离不用设置
         // shiroFilterFactoryBean.setSuccessUrl("/index");
@@ -59,15 +61,24 @@ public class ShiroConfig {
     @Bean
     public MyShiroRealm myShiroRealm() {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
-        //设置密码比较器
-        //myShiroRealm.setCredentialsMatcher(myCredentialsMatcher());
+        // 设置密码比较器
+        myShiroRealm.setCredentialsMatcher(CredentialsMatcher());
         return myShiroRealm;
     }
+
     @Bean
-    public MyCredentialsMatcher myCredentialsMatcher() {
-        MyCredentialsMatcher mtm = new MyCredentialsMatcher();
-        return mtm;
+    public SimpleCredentialsMatcher CredentialsMatcher() {
+        MyCredentialsMatcher hct = new MyCredentialsMatcher();//自定义凭证比较器
+        //HashedCredentialsMatcher hct = new HashedCredentialsMatcher();//系统提供凭证比较器
+        // 加密算法的名称
+        hct.setHashAlgorithmName("MD5");
+        // 配置加密的次数
+        hct.setHashIterations(1024);
+        // 是否存储为16进制
+        hct.setStoredCredentialsHexEncoded(true);
+        return hct;
     }
+
     /**
      * 注入 securityManager
      */
@@ -78,10 +89,10 @@ public class ShiroConfig {
         securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
-    
+
     /**
-     * Cookie 对象
-     * 用户免登陆操作，但是需要配置filter /** 权限为user生效
+     * Cookie 对象 用户免登陆操作，但是需要配置filter /** 权限为user生效
+     * 
      * @return
      */
     public SimpleCookie rememMeCookie() {
