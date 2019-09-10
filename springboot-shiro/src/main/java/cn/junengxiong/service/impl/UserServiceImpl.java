@@ -20,13 +20,13 @@ public class UserServiceImpl implements UserService {
         switch (username) {
         case "admin":
             roleList.add("admin");
-            user.setPassword("admin");
+            user.setPassword("df655ad8d3229f3269fad2a8bab59b6c");
             permissionsList.add("user:add");
             permissionsList.add("user:delete");
             break;
         case "consumer":
             roleList.add("consumer");
-            user.setPassword("consumer");
+            user.setPassword("6f552e6765c1ac92f4c84b026a25d585");
             permissionsList.add("consumer:modify");
             break;
         default:

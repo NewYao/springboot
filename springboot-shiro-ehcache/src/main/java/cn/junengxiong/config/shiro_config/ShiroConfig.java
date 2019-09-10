@@ -3,6 +3,7 @@ package cn.junengxiong.config.shiro_config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
@@ -16,41 +17,45 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import net.sf.ehcache.CacheManager;
+
 @Component
 public class ShiroConfig {
 	// remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
 	private static final String ENCRYPTION_KEY = "3AvVhmFLUs0KTA3Kprsdag==";
 
-	@Bean
-	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
-		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-		shiroFilterFactoryBean.setSecurityManager(securityManager);
-		// 拦截器
-		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-		// 配置不会被拦截的链接 顺序判断
-		filterChainDefinitionMap.put("/static/**", "anon");
-		filterChainDefinitionMap.put("/login", "anon");
-		// 配置退出 过滤器，其中具体的退出代码Shiro已经替我们实现了
-		filterChainDefinitionMap.put("/logout", "logout");
-		// <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，注意
-		// <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-		filterChainDefinitionMap.put("/**", "authc");// 设置/** 为user后，记住我才会生效
-		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面,前后端分离设置此为controller返回的未登录的接口
-		// --------------------------------------------------
-		// 前后端分离使用下面设置
-		shiroFilterFactoryBean.setLoginUrl("/login.html");
-		// shiroFilterFactoryBean.setLoginUrl("/unauthorized");
-		// ---------------------------------------------------
-		// 登录成功后跳转的链接,前后端分离不用设置
-		// shiroFilterFactoryBean.setSuccessUrl("/index");
+	 @Bean
+	    public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
+	        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+	        shiroFilterFactoryBean.setSecurityManager(securityManager);
+	        // 拦截器
+	        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+	        // 配置不会被拦截的链接 顺序判断
+	        filterChainDefinitionMap.put("/static/**", "anon");
+	        filterChainDefinitionMap.put("/login", "anon");
+	        // 配置退出 过滤器，其中具体的退出代码Shiro已经替我们实现了
+	        filterChainDefinitionMap.put("/logout", "logout");
+	        filterChainDefinitionMap.put("/user", "user");
+	        // 因为目前演示页面依附在此项目下，特为演示页面新增可无权限访问，前后端分离后无需此设置
+	        filterChainDefinitionMap.put("/login.html", "anon");
+	        // <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->因为保存在LinkedHashMap中，顺序很重要
+	        // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
+	        filterChainDefinitionMap.put("/**", "authc");// 设置/** 为user后，记住我才会生效
+	        // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面,前后端分离设置此为controller返回的未登录的接口
+	        // --------------------------------------------------
+	        // 前后端分离使用下面设置
+	        // shiroFilterFactoryBean.setLoginUrl("/login.html");
+	        shiroFilterFactoryBean.setLoginUrl("/unauthorized");// 前后端分离只需要把需要登录返回告诉前端页面即可
+	        // ---------------------------------------------------
+	        // 登录成功后跳转的链接,前后端分离不用设置
+	        // shiroFilterFactoryBean.setSuccessUrl("/index");
 
-		// 未授权的界面
-		shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
-		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+	        // 未授权的界面
+	        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
+	        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
-		return shiroFilterFactoryBean;
-	}
-
+	        return shiroFilterFactoryBean;
+	    }
 	/**
 	 * 自定义身份认证 realm;
 	 * <p>
@@ -59,6 +64,8 @@ public class ShiroConfig {
 	@Bean
 	public MyShiroRealm myShiroRealm() {
 		MyShiroRealm myShiroRealm = new MyShiroRealm();
+		// 设置密码比较器
+        myShiroRealm.setCredentialsMatcher(CredentialsMatcher());
 		// 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
 		myShiroRealm.setAuthenticationCachingEnabled(true);
 		// 缓存AuthenticationInfo信息的缓存名称 在ehcache-shiro.xml中有对应缓存的配置
@@ -69,7 +76,19 @@ public class ShiroConfig {
 		myShiroRealm.setAuthorizationCacheName("authorizationCache");
 		return myShiroRealm;
 	}
-
+	
+    @Bean
+    public SimpleCredentialsMatcher CredentialsMatcher() {
+        MyCredentialsMatcher hct = new MyCredentialsMatcher();//自定义凭证比较器
+        // 加密算法的名称
+        hct.setHashAlgorithmName("MD5");
+        // 配置加密的次数
+        hct.setHashIterations(1024);
+        // 是否存储为16进制
+        hct.setStoredCredentialsHexEncoded(true);
+        return hct;
+    }
+    
 	/**
 	 * 注入 securityManager
 	 */
@@ -78,14 +97,14 @@ public class ShiroConfig {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		securityManager.setRealm(myShiroRealm());
 		securityManager.setRememberMeManager(rememberMeManager());
-		securityManager.setCacheManager(ehCacheManager());// 将缓存管理交给ehCache
+		securityManager.setCacheManager(myEhCacheManager());// 将缓存管理交给ehCache
 		return securityManager;
 	}
 
 
 	@Bean
-	public EhCacheManager ehCacheManager() {
-		net.sf.ehcache.CacheManager cacheManager = net.sf.ehcache.CacheManager.getCacheManager("ehcache");
+	public EhCacheManager myEhCacheManager() {
+		CacheManager cacheManager = CacheManager.getCacheManager("ehcache");
 		EhCacheManager em = new EhCacheManager();
 		//因为配合springboot热启动，所以注入bean时加上此判断，不然会报错
 		if (ObjectUtils.isEmpty(cacheManager)) {
