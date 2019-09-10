@@ -3,7 +3,6 @@ package cn.junengxiong.config.shiro_config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
@@ -32,6 +31,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login", "anon");
         // 配置退出 过滤器，其中具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
+        filterChainDefinitionMap.put("/user", "user");
         // 因为目前演示页面依附在此项目下，特为演示页面新增可无权限访问，前后端分离后无需此设置
         filterChainDefinitionMap.put("/login.html", "anon");
         // <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->因为保存在LinkedHashMap中，顺序很重要
@@ -69,7 +69,6 @@ public class ShiroConfig {
     @Bean
     public SimpleCredentialsMatcher CredentialsMatcher() {
         MyCredentialsMatcher hct = new MyCredentialsMatcher();//自定义凭证比较器
-        //HashedCredentialsMatcher hct = new HashedCredentialsMatcher();//系统提供凭证比较器
         // 加密算法的名称
         hct.setHashAlgorithmName("MD5");
         // 配置加密的次数
@@ -116,16 +115,6 @@ public class ShiroConfig {
         return cookieRememberMeManager;
     }
 
-    /**
-     * 配置Shiro生命周期处理器,在此说明，如果配合spring食用时，是无需配置此项的，可以查看
-     * shiro-spring-config.ShiroBeanConfiguration文件，此配置已经帮我们配置好了
-     * 
-     * @return
-     */
-//    @Bean(name = "lifecycleBeanPostProcessor")
-//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-//        return new LifecycleBeanPostProcessor();
-//    }
 
     /**
      * 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
