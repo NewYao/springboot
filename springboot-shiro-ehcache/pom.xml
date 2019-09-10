@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>cn.junengxiong</groupId>
-  <artifactId>springboot-shiro-encache</artifactId>
+  <artifactId>springboot-shiro-ehcache</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>springboot-shiro-encache Maven Webapp</name>
+  <name>springboot-shiro-ehcache Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <parent>
         <groupId>org.springframework.boot</groupId>
@@ -40,6 +40,6 @@
         </dependency>
     </dependencies>
   <build>
-    <finalName>springboot-shiro-encache</finalName>
+    <finalName>springboot-shiro-ehcache</finalName>
   </build>
 </project>
