@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -63,6 +65,11 @@ public class ShiroConfig {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
         // 设置密码比较器
         myShiroRealm.setCredentialsMatcher(CredentialsMatcher());
+        // 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
+        myShiroRealm.setAuthenticationCachingEnabled(true);
+        // 启用授权缓存，即缓存AuthorizationInfo信息，默认false,一旦配置了缓存管理器，授权缓存默认开启
+        myShiroRealm.setAuthorizationCachingEnabled(true);
+        
         return myShiroRealm;
     }
 
@@ -84,11 +91,22 @@ public class ShiroConfig {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(myShiroRealm());
-        securityManager.setRememberMeManager(rememberMeManager());
+        securityManager.setRealm(myShiroRealm());//配置自定义权限认证器
+        securityManager.setRememberMeManager(rememberMeManager());//配置记住我管理器
+        securityManager.setCacheManager(cacheManager());//配置缓存管理器
         return securityManager;
     }
-
+    
+    /**
+     * 缓存管理器
+     * @return
+     */
+    @Bean
+    public CacheManager cacheManager() {
+        MemoryConstrainedCacheManager mccm = new MemoryConstrainedCacheManager();
+        return mccm;
+    }
+    
     /**
      * Cookie 对象 用户免登陆操作，但是需要配置filter /** 权限为user生效
      * 
@@ -96,7 +114,7 @@ public class ShiroConfig {
      */
     public SimpleCookie rememMeCookie() {
         // 初始化设置cookie的名称
-        SimpleCookie simpleCookie = new SimpleCookie("boot-shiro");
+        SimpleCookie simpleCookie = new SimpleCookie("shiro-remember");
         simpleCookie.setMaxAge(2592000);// 设置cookie的生效时间
         simpleCookie.setHttpOnly(true);
         return simpleCookie;
