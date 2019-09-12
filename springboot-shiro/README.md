@@ -8,3 +8,4 @@
 - [Shiro SimpleAuthenticationInfo使用](https://blog.csdn.net/qq_35981283/article/details/78634575)
 - [shiro学习之LifecycleBeanPostProcessor的作用](https://blog.csdn.net/hxm_code/article/details/78697305)
 - [Shiro异常java.lang.IllegalArgumentException: Odd number of characters的解决方案](https://blog.csdn.net/weixin_38278878/article/details/81054672)
+- [Shiro学习--解决修改权限后需要重启的问题](https://blog.csdn.net/u010351766/article/details/78364711)
