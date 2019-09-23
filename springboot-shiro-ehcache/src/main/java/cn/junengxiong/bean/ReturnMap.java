@@ -1,6 +1,5 @@
 package cn.junengxiong.bean;
 
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 

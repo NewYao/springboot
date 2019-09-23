@@ -23,7 +23,7 @@ import cn.junengxiong.service.UserService;
  * 自定义登录权限认证
  * 
  * @ClassName: MyShiroRealm
- * @Description TODO
+ * @Description TODO 
  * @version
  * @author jh
  * @date 2019年8月27日 下午4:12:40
