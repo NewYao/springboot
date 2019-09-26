@@ -7,11 +7,13 @@ import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -98,6 +100,7 @@ public class ShiroConfig {
 		securityManager.setRealm(myShiroRealm());
 		securityManager.setRememberMeManager(rememberMeManager());
 		securityManager.setCacheManager(myEhCacheManager());// 将缓存管理交给ehCache
+		//securityManager.setSessionManager(sessionManager);
 		return securityManager;
 	}
 
@@ -114,7 +117,13 @@ public class ShiroConfig {
 		}
 		return em;
 	}
-
+	
+	
+//	public SessionManager getSessionManager() {
+//	    DefaultWebSessionManager dwsm = new DefaultWebSessionManager();
+//	    dwsm.setSessionDAO(sessionDAO);
+//	    return dwsm;
+//	}
 	/**
 	 * Cookie 对象 用户免登陆操作，但是需要配置filter /** 权限为user生效
 	 * 

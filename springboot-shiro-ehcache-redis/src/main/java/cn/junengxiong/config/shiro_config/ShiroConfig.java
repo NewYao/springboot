@@ -184,6 +184,7 @@ public class ShiroConfig {
     @Bean
     public RedisSessionDAO redisSessionDAO() {
         RedisSessionDAO redisSessionDao = new RedisSessionDAO();
+        redisSessionDao.setKeyPrefix("shiro-session");//配置session前缀
         redisSessionDao.setSessionIdGenerator(sessionIdGenerator());
         redisSessionDao.setRedisManager(redisManager());
         // session在redis中的保存时间,最好大于session会话超时时间
@@ -200,7 +201,7 @@ public class ShiroConfig {
     @Bean("sessionIdCookie")
     public SimpleCookie sessionIdCookie() {
         // 这个参数是cookie的名称
-        SimpleCookie simpleCookie = new SimpleCookie("MYJSESSIONID");
+        SimpleCookie simpleCookie = new SimpleCookie("REDIS-SESSION");
         // setcookie的httponly属性如果设为true的话，会增加对xss防护的安全系数。它有以下特点：
 
         // setcookie()的第七个参数
@@ -238,7 +239,7 @@ public class ShiroConfig {
         // 设置该属性 就不需要设置 ExecutorServiceSessionValidationScheduler
         // 底层也是默认自动调用ExecutorServiceSessionValidationScheduler
         sessionManager.setSessionValidationInterval(3600000);//单位毫秒
-        // 取消url 后面的 JSESSIONID
+        // 取消url 后面的 JSESSIONID，设置为false为取消
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         return sessionManager;
 

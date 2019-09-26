@@ -9,15 +9,26 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.junengxiong.bean.ReturnMap;
+import cn.junengxiong.config.shiro_config.MyShiroRealm;
 
 @RestController
 public class ShiroController {
+    @RequestMapping("/clear")
+    public ReturnMap clear() {
+        RealmSecurityManager rsm = (RealmSecurityManager)SecurityUtils.getSecurityManager();  
+        MyShiroRealm realm = (MyShiroRealm)rsm.getRealms().iterator().next(); 
+        realm.clearCachedAuthenticationInfo();
+        realm.clearCachedAuthorizationInfo();
+        System.out.println("清除成功");
+        return new ReturnMap().success().data("清除成功");
+    }
     
     @RequestMapping("/user")
     public ReturnMap user() {

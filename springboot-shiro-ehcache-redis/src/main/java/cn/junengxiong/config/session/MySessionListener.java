@@ -22,7 +22,7 @@ public class MySessionListener implements SessionListener {
     @Override
     public void onStart(Session session) {
         sessionCount.incrementAndGet();
-        System.out.println("登录，在线人数："+sessionCount.get());
+        System.out.println("登录，有效session数量："+sessionCount.get());
     }
 
     /**
@@ -31,7 +31,7 @@ public class MySessionListener implements SessionListener {
     @Override
     public void onStop(Session session) {
         sessionCount.decrementAndGet();
-        System.out.println("登出，在线人数："+sessionCount.get());
+        System.out.println("登出，有效session数量："+sessionCount.get());
     }
 
     /**
@@ -40,7 +40,7 @@ public class MySessionListener implements SessionListener {
     @Override
     public void onExpiration(Session session) {
         sessionCount.decrementAndGet();
-        System.out.println("session过期，在线人数："+sessionCount.get());
+        System.out.println("session过期，有效session数量："+sessionCount.get());
     }
 
 }
