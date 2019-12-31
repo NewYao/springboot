@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+</head>
+<body>
+	<table>
+		<tr>
+			<td>请输入姓名</td>
+			<td><input type="text" name="username" id="username" /></td>
+		</tr>
+		<tr>
+			<td>请输入密码</td>
+			<td><input type="text" name="password" id="password" /></td>
+		</tr>
+		<tr>
+			<td>用户类型</td>
+			<td>
+				<select name="loginType" id="loginType">
+						<option value="username">用户名登录</option>
+						<option value="phone">手机号登录</option>
+						<option value="email">邮箱登录</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>记住我</td>
+			<td><input type="checkbox" name="rememberMe" id="rememberMe" /></td>
+		</tr>
+	</table>
+	<button type="button" onclick="login()">登录</button>
+	<button type="button" onclick="loginout()">登出</button>
+	<table>
+		<tr>
+			<td><button onclick="authority('/admin/可以访问admin')">admin
+					管理员接口</button></td>
+			<td><button onclick="authority('/consumer/可以访问consumer')">consumer
+					用户接口</button></td>
+			<td><button onclick="authority('/guest/可以访问guest')">guest
+					访客接口</button></td>
+			<td><button onclick="authority('/user')">user接口</button></td>
+			<td><button onclick="authority('/clear')">clear接口</button></td>
+		</tr>
+	</table>
+	<textarea rows="5" cols="60" id="textarea"></textarea>
+	<script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+</body>
+<script type="text/javascript">
+	function login() {//登录
+		var username = $('#username').val();
+		var password = $('#password').val();
+		var flag = $('#rememberMe').prop('checked');
+		var loginType = $('#loginType').val();
+		console.log(flag)
+		$.ajax({
+			url : '/login',
+			data : {
+				'username' : username,
+				'password' : password,
+				'rememberMe' : flag,
+				'loginType' : loginType
+			},
+			success : function(res) {
+				console.log(res)
+				$('#textarea').val(JSON.stringify(res));
+			}
+		})
+	}
+	function loginout() {//登出
+		$.ajax({
+			url : '/loginout',
+			success : function(res) {
+				$('#textarea').val(JSON.stringify(res));
+			}
+		})
+	}
+	//权限测试
+	function authority(url) {
+		$.ajax({
+			url : url,
+			success : function(res) {
+				$('#textarea').val(JSON.stringify(res));
+			}
+		})
+	}
+</script>
+</html>
