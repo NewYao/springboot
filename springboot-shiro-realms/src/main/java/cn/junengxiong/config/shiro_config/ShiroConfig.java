@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.codec.Base64;
@@ -73,6 +75,17 @@ public class ShiroConfig {
         myShiroRealm.setAuthorizationCachingEnabled(true);
         
         return myShiroRealm;
+    }
+    /**
+     * 自定义身份认证realm控制器
+     * @return
+     */
+    @Bean
+    public ModularRealmAuthenticator myModularRealmAuthenticator(){
+        //自定义身份认证realm控制器
+        MyModularRealmAuthenticator modularRealmAuthenticator = new MyModularRealmAuthenticator();
+        modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
+        return modularRealmAuthenticator;
     }
 
     @Bean
