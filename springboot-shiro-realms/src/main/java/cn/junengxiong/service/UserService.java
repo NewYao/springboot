@@ -5,5 +5,7 @@ import cn.junengxiong.bean.User;
 public interface UserService {
     User findByUsername(String username);
 
-    User findByEmail(String Email);
+    User findByEmail(String email);
+    
+    User findByPhone(String phone);
 }

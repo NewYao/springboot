@@ -1,7 +1,9 @@
 package cn.junengxiong.config.shiro_config;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
@@ -10,6 +12,7 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
@@ -19,7 +22,10 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import cn.junengxiong.config.shiro_config.realms.ParentRealm;
 import cn.junengxiong.config.shiro_config.realms.RealmEmail;
+import cn.junengxiong.config.shiro_config.realms.RealmPhone;
+import cn.junengxiong.config.shiro_config.realms.RealmUsername;
 
 @Component
 public class ShiroConfig {
@@ -60,12 +66,12 @@ public class ShiroConfig {
     }
 
     /**
-     * 自定义身份认证 realm;
+     * 自定义身份认证 realmEmail;
      * <p>
      * 必须写这个类，并加上 @Bean 注解，目的是注入 MyShiroRealm， 否则会影响 MyShiroRealm类 中其他类的依赖注入
      */
     @Bean
-    public RealmEmail myShiroRealm() {
+    public ParentRealm realmEmail() {
         RealmEmail myShiroRealm = new RealmEmail();
         // 设置密码比较器
         myShiroRealm.setCredentialsMatcher(CredentialsMatcher());
@@ -75,6 +81,39 @@ public class ShiroConfig {
         myShiroRealm.setAuthorizationCachingEnabled(true);
         
         return myShiroRealm;
+    }
+    /**
+     * 自定义身份认证 realmPhone;
+     * <p>
+     * 必须写这个类，并加上 @Bean 注解，目的是注入 MyShiroRealm， 否则会影响 MyShiroRealm类 中其他类的依赖注入
+     */
+    @Bean
+    public ParentRealm realmPhone() {
+        RealmPhone realmPhone = new RealmPhone();
+        // 设置密码比较器
+        realmPhone.setCredentialsMatcher(CredentialsMatcher());
+        // 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
+        realmPhone.setAuthenticationCachingEnabled(true);
+        // 启用授权缓存，即缓存AuthorizationInfo信息，默认false,一旦配置了缓存管理器，授权缓存默认开启
+        realmPhone.setAuthorizationCachingEnabled(true);
+        
+        return realmPhone;
+    }
+    /**
+     * 自定义身份认证 realmUsername;
+     * <p>
+     * 必须写这个类，并加上 @Bean 注解，目的是注入 MyShiroRealm， 否则会影响 MyShiroRealm类 中其他类的依赖注入
+     */
+    @Bean
+    public ParentRealm realmUsername() {
+        RealmUsername realmUsername = new RealmUsername();
+        // 设置密码比较器
+        realmUsername.setCredentialsMatcher(CredentialsMatcher());
+        // 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
+        realmUsername.setAuthenticationCachingEnabled(true);
+        // 启用授权缓存，即缓存AuthorizationInfo信息，默认false,一旦配置了缓存管理器，授权缓存默认开启
+        realmUsername.setAuthorizationCachingEnabled(true);
+        return realmUsername;
     }
     /**
      * 自定义身份认证realm控制器
@@ -106,7 +145,12 @@ public class ShiroConfig {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(myShiroRealm());//配置自定义权限认证器
+        securityManager.setAuthenticator(myModularRealmAuthenticator());//配置自定义realm过滤器
+        Set<Realm> realms  = new HashSet<>();
+        realms.add(realmEmail());
+        realms.add(realmPhone());
+        realms.add(realmUsername());
+        securityManager.setRealms(realms);;//配置自定义权限认证器
         securityManager.setRememberMeManager(rememberMeManager());//配置记住我管理器
         securityManager.setCacheManager(cacheManager());//配置缓存管理器
         return securityManager;

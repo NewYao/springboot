@@ -12,23 +12,31 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import cn.junengxiong.bean.User;
+import cn.junengxiong.config.shiro_config.SpringBeanFactoryUtil;
 import cn.junengxiong.service.UserService;
 
-public class RealmPhone extends AuthorizingRealm {
+public class RealmPhone extends ParentRealm {
+    @Autowired
+    @Lazy
+    UserService userService;
+
     /**
      * 权限设置
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        System.out.println("进入MyShiroRealm2自定义权限设置方法！");
+        if (userService == null) {
+            userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
+        }
+        System.out.println("进入RealmPhone权限设置方法！");
         String username = (String) principals.getPrimaryPrincipal();
         // 从数据库或换村中获取用户角色信息
-        User user = findByUsername(username);
+        User user = userService.findByPhone(username);// 根据用户输入用户名查询该用户
         // 获取用户角色
         Set<String> roles = user.getRole();
         // 获取用户权限
@@ -47,33 +55,19 @@ public class RealmPhone extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         SimpleAuthenticationInfo simpleAuthenticationInfo = null;
-        System.out.println("进入MyShiroRealm2自定义登录验证方法！");
+        if (userService == null) {
+            userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
+        }
+        System.out.println("进入RealmPhone登录验证方法！");
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
         String username = usernamePasswordToken.getUsername();// 用户输入用户名
-        User user = findByUsername(username);// 根据用户输入用户名查询该用户
+        User user = userService.findByPhone(username);// 根据用户输入用户名查询该用户
         if (user != null) {
             String password = user.getPassword();// 数据库获取的密码
             // 主要的（用户名，也可以是用户对象（最好不放对象）），资格证书(数据库获取的密码)，区域名称（当前realm名称）
             simpleAuthenticationInfo = new SimpleAuthenticationInfo(username, password, getName());
         }
         return simpleAuthenticationInfo;
-    }
-
-    User findByUsername(String username) {
-        User user = null;
-        if ("superadmin".equals(username)) {
-            Set<String> roleList = new HashSet<>();
-            Set<String> permissionsList = new HashSet<>();
-            roleList.add("super");
-            permissionsList.add("all");
-            user = new User();
-            user.setUsername("superadmin");
-            user.setPassword("12345678");
-            user.setPermission(permissionsList);
-            user.setRole(roleList);
-        }
-        return user;
-
     }
 
     /**

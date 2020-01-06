@@ -11,10 +11,10 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import cn.junengxiong.bean.User;
 import cn.junengxiong.config.shiro_config.SpringBeanFactoryUtil;
@@ -29,10 +29,11 @@ import cn.junengxiong.service.UserService;
  * @author jh
  * @date 2019年8月27日 下午4:12:40
  */
-public class RealmEmail extends AuthorizingRealm {
+public class RealmEmail extends ParentRealm {
     @Autowired
+    @Lazy
     UserService userService;
-    
+
     /**
      * 权限设置
      */
@@ -41,10 +42,10 @@ public class RealmEmail extends AuthorizingRealm {
         if (userService == null) {
             userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
         }
-        System.out.println("进入自定义权限设置方法！");
+        System.out.println("进入RealmEmail权限设置方法！");
         String username = (String) principals.getPrimaryPrincipal();
         // 从数据库或换村中获取用户角色信息
-        User user = userService.findByUsername(username);
+        User user = userService.findByEmail(username);
         // 获取用户角色
         Set<String> roles = user.getRole();
         // 获取用户权限
@@ -63,7 +64,7 @@ public class RealmEmail extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        System.out.println("进入自定义登录验证方法！");
+        System.out.println("进入RealmEmail登录验证方法！");
         if (userService == null) {
             userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
         }
@@ -81,9 +82,9 @@ public class RealmEmail extends AuthorizingRealm {
         return simpleAuthenticationInfo;
     }
 
-    
     /**
      * 重写方法,清除当前用户的的 授权缓存
+     * 
      * @param principals
      */
     public void clearCachedAuthorizationInfo() {
@@ -92,11 +93,13 @@ public class RealmEmail extends AuthorizingRealm {
 
     /**
      * 重写方法，清除当前用户的 认证缓存
+     * 
      * @param principals
      */
     public void clearCachedAuthenticationInfo() {
         super.clearCachedAuthenticationInfo(SecurityUtils.getSubject().getPrincipals());
     }
+
     /**
      * 清除某个用户认证和授权缓存
      */
@@ -120,13 +123,11 @@ public class RealmEmail extends AuthorizingRealm {
     }
 
     /**
-     * 自定义方法：清除所有的  认证缓存  和 授权缓存
+     * 自定义方法：清除所有的 认证缓存 和 授权缓存
      */
     public void clearAllCache() {
         clearAllCachedAuthenticationInfo();
         clearAllCachedAuthorizationInfo();
     }
-    
-    
 
 }

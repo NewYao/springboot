@@ -3,10 +3,19 @@ package cn.junengxiong.bean;
 import java.util.Set;
 
 public class User {
+    
     private String username;
+    
     private String password;
+    
     private Set<String> role;
+    
     private Set<String> permission;
+    
+    private String phone;
+    
+    private String email;
+
     public String getUsername() {
         return username;
     }
@@ -39,11 +48,29 @@ public class User {
         this.permission = permission;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "User [username=" + username + ", password=" + password + ", role=" + role + ", permission=" + permission
-                + "]";
+                + ", phone=" + phone + ", email=" + email + ", getUsername()=" + getUsername() + ", getPassword()="
+                + getPassword() + ", getRole()=" + getRole() + ", getPermission()=" + getPermission() + ", getPhone()="
+                + getPhone() + ", getEmail()=" + getEmail() + ", getClass()=" + getClass() + ", hashCode()="
+                + hashCode() + ", toString()=" + super.toString() + "]";
     }
-
 
 }

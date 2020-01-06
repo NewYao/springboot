@@ -14,35 +14,51 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         User user = new User();
-        user.setUsername(username);
-        Set<String> roleList = new HashSet<>();
-        Set<String> permissionsList = new HashSet<>();
-        switch (username) {
-        case "admin":
+        if ("username".equals(username)) {
+            Set<String> roleList = new HashSet<>();
+            Set<String> permissionsList = new HashSet<>();
             roleList.add("admin");
-            user.setPassword("df655ad8d3229f3269fad2a8bab59b6c");
-            permissionsList.add("user:add");
-            permissionsList.add("user:delete");
-            break;
-        case "consumer":
-            roleList.add("consumer");
-            user.setPassword("6f552e6765c1ac92f4c84b026a25d585");
-            permissionsList.add("consumer:modify");
-            break;
-        default:
-            roleList.add("guest");
-            user.setPassword("565dd969076eef0ac3f9d49aa61e9489");
-            break;
+            permissionsList.add("admin");
+            user.setUsername("username");
+            user.setPassword("b6d3d2a23b4d5e313d3f2efe3cda2614");
+            user.setRole(roleList);
+            user.setPermission(permissionsList);
+            return user;
+        } else {
+            return null;
         }
-        user.setRole(roleList);
-        user.setPermission(permissionsList);
-        return user;
     }
 
     @Override
-    public User findByEmail(String Email) {
-        // TODO Auto-generated method stub
-        return null;
+    public User findByEmail(String email) {
+        User user = new User();
+        if ("email".equals(email)) {
+            Set<String> roleList = new HashSet<>();// 角色
+            Set<String> permissionsList = new HashSet<>();// 权限
+            roleList.add("consumer");
+            permissionsList.add("consumer");
+            user.setUsername("email");
+            user.setPassword("5fb06af6320cb2f9f090c4f9e1337ffb");
+            return user;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public User findByPhone(String phone) {
+        User user = new User();
+        Set<String> roleList = new HashSet<>();// 角色
+        Set<String> permissionsList = new HashSet<>();// 权限
+        if ("phone".equals(phone)) {
+            user.setUsername("guest");
+            user.setPassword("94585d3850aa9fe1156d272ce3447a07");
+            roleList.add("guest");
+            permissionsList.add("guest");
+            return user;
+        } else {
+            return null;
+        }
     }
 
 }
