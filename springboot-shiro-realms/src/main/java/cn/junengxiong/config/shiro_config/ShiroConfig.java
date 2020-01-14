@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.authc.pam.AllSuccessfulStrategy;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
@@ -123,6 +125,10 @@ public class ShiroConfig {
     public ModularRealmAuthenticator myModularRealmAuthenticator(){
         //自定义身份认证realm控制器
         MyModularRealmAuthenticator modularRealmAuthenticator = new MyModularRealmAuthenticator();
+        //配置多realm认证策略
+        //默认使用AtLeastOneSuccessFulAtrategy(至少一个成功的策略)
+        //AllSuccessFulStrategy ()全部成功策略没问题
+        //FirstSuccessFulStrategy 第一个成功策略
         modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
         return modularRealmAuthenticator;
     }
