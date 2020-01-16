@@ -86,10 +86,10 @@ public class MyModularRealmAuthenticator extends ModularRealmAuthenticator {
                     }
                 }
                 //处理只提示AuthenticationException异常问题
-//                if(t instanceof AuthenticationException) {
-//                    log.debug("realmName:"+realm.getName(), t);
-//                    throw ((AuthenticationException)t);
-//                }
+                if(t instanceof AuthenticationException) {
+                    log.debug("realmName:"+realm.getName(), t);
+                    throw ((AuthenticationException)t);
+                }
                 aggregate = strategy.afterAttempt(realm, token, info, aggregate, t);
 
             } else {

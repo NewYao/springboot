@@ -126,7 +126,7 @@ public class ShiroConfig {
         //自定义身份认证realm控制器
         MyModularRealmAuthenticator modularRealmAuthenticator = new MyModularRealmAuthenticator();
         //配置多realm认证策略
-        //默认使用AtLeastOneSuccessFulAtrategy(至少一个成功的策略)
+        //默认使用AtLeastOneSuccessfulStrategy(至少一个成功的策略)
         //AllSuccessFulStrategy ()全部成功策略没问题
         //FirstSuccessFulStrategy 第一个成功策略
         modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
