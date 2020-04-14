@@ -22,14 +22,15 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 import cn.junengxiong.config.shiro_config.realms.ParentRealm;
 import cn.junengxiong.config.shiro_config.realms.RealmEmail;
 import cn.junengxiong.config.shiro_config.realms.RealmPhone;
 import cn.junengxiong.config.shiro_config.realms.RealmUsername;
 
-@Component
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class ShiroConfig {
     // remeberMe cookie 加密的密钥 各个项目不一样 默认AES算法 密钥长度（128 256 512）
     private static final String ENCRYPTION_KEY = "3AvVhmFLUs0KTA3Kprsdag==";
