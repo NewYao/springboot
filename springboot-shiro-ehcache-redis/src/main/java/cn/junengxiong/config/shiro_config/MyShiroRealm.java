@@ -41,9 +41,6 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        if (userService == null) {
-            userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
-        }
         System.out.println("进入自定义权限设置方法！");
         String username = (String) principals.getPrimaryPrincipal();
         // 从数据库或换村中获取用户角色信息
@@ -67,9 +64,6 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         System.out.println("进入自定义登录验证方法！");
-        if (userService == null) {
-            userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
-        }
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
         String username = usernamePasswordToken.getUsername();// 用户输入用户名
         User user = userService.findByUsername(username);// 根据用户输入用户名查询该用户
