@@ -41,6 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ShiroException.class)
     @ResponseBody
     public ReturnMap handle401() {
+        System.out.println("没权限");
         return new ReturnMap().invalid().message("您没有权限访问！");
     }
     

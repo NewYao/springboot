@@ -103,6 +103,7 @@ public class ShiroController {
      */
     @RequestMapping("/unauthorized")
     public ReturnMap unauthorized() {
+        System.out.println("controller里的无权限");
         return new ReturnMap().invalid();
     }
 }

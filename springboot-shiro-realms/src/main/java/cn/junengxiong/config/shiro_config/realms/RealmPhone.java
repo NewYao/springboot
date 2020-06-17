@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
 import cn.junengxiong.bean.User;
-import cn.junengxiong.config.shiro_config.SpringBeanFactoryUtil;
 import cn.junengxiong.service.UserService;
 
 public class RealmPhone extends ParentRealm {
@@ -30,9 +29,6 @@ public class RealmPhone extends ParentRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        if (userService == null) {
-            userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
-        }
         System.out.println("进入RealmPhone权限设置方法！");
         String username = (String) principals.getPrimaryPrincipal();
         // 从数据库或换村中获取用户角色信息
@@ -54,9 +50,6 @@ public class RealmPhone extends ParentRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        if (userService == null) {
-            userService = (UserService) SpringBeanFactoryUtil.getBeanByName("userServiceImpl");
-        }
         System.out.println("进入RealmPhone登录验证方法！");
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
         String username = usernamePasswordToken.getUsername();// 用户输入用户名
