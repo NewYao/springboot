@@ -35,12 +35,18 @@
 			<scope>true</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.alibaba/easyexcel -->
-		<!-- https://mvnrepository.com/artifact/com.alibaba/easyexcel -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>easyexcel</artifactId>
 			<version>2.1.6</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.71</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>springboot-excle</finalName>
