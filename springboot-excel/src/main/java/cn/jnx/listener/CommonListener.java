@@ -1,4 +1,4 @@
-package cn.jnx.util;
+package cn.jnx.listener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,23 +13,19 @@ import com.alibaba.fastjson.JSON;
 
 import cn.jnx.mapper.SaveExcelDao;
 
-public class ExampleReadListener extends AnalysisEventListener<Map<Integer, String>> {
+public class CommonListener extends AnalysisEventListener<Map<Integer, String>> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MemberExcelListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberListener.class);
 
 	private SaveExcelDao saveExcelDao = null;
 
 	/**
-	 * 使用spring管理需要传入需要spring管理的SaveExcelDao，没有使用spring则可以传入null
+	 * 使用spring管理需要传入需要spring管理的SaveExcelDao
 	 * 
 	 * @param dao
 	 */
-	public ExampleReadListener(SaveExcelDao dao) {
-		if (dao == null) {
-			saveExcelDao = new SaveExcelDao();
-		} else {
+	public CommonListener(SaveExcelDao dao) {
 			saveExcelDao = dao;
-		}
 	}
 
 	/**
@@ -61,7 +57,7 @@ public class ExampleReadListener extends AnalysisEventListener<Map<Integer, Stri
 	 * 进行数据处理
 	 */
 	private void processingData() {
-		saveData();// 进行储存相关业务
+		//saveData();// 进行储存相关业务
 		clearData();// 清空datas中的数据
 	}
 

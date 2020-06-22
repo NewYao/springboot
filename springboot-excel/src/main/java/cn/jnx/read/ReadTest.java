@@ -1,4 +1,4 @@
-package cn.jnx.test;
+package cn.jnx.read;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,10 +12,10 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 
 import cn.jnx.bean.Member;
+import cn.jnx.listener.CommonListener;
+import cn.jnx.listener.MemberListener;
 import cn.jnx.mapper.SaveExcelDao;
 import cn.jnx.util.FileUtil;
-import cn.jnx.util.MemberExcelListener;
-import cn.jnx.util.ExampleReadListener;
 
 public class ReadTest {
 
@@ -40,7 +40,7 @@ public class ReadTest {
 	@Test
 	public void readExcle() {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
-		EasyExcel.read(filePath, new ExampleReadListener(sed)).sheet().doRead();
+		EasyExcel.read(filePath, new CommonListener(sed)).sheet().doRead();
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ReadTest {
 	@Test
 	public void readExcleWithModel() {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
-		EasyExcel.read(filePath, Member.class, new MemberExcelListener(sed)).sheet().doRead();
+		EasyExcel.read(filePath, Member.class, new MemberListener(sed)).sheet().doRead();
 	}
 
 	/**

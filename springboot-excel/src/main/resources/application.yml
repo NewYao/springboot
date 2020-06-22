@@ -1,0 +1,13 @@
+server:
+    port: 8888
+    servlet:
+    # 项目访问前缀
+        context-path: /
+        
+#指定driver的类名，默认从jdbc url中自动探测.
+spring:
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1/excel?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+        username: root
+        password: root
