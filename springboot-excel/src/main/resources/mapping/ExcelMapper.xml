@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jnx.mapper.SaveExcelDao" >
+  
+  <!-- mysql的批量插入方式 -->
+<insert id="insertGqsjBatch" parameterType="java.util.List">
+    INSERT INTO excel
+      ( id,
+      old_name, 
+      new_name, 
+      corp_code, 
+      patch_year,
+      intellectual_property,
+      Software_copyright,
+      `convert`,
+      `patent`)
+    VALUES
+    <foreach collection ="list" item="item" index= "index" separator =",">
+        (
+        #{item.id},
+        #{item.old_name},
+        #{item.new_name},
+        #{item.corp_code},
+        #{item.patch_year},
+        #{item.intellectual_property,jdbcType=DECIMAL},
+        #{item.software_copyright,jdbcType=DECIMAL},
+        #{item.convert,jdbcType=DECIMAL},
+        #{item.patent,jdbcType=DECIMAL}
+        )
+    </foreach >
+</insert>
+</mapper>

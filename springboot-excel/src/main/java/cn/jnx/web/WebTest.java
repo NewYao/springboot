@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.excel.EasyExcel;
 
+import cn.jnx.bean.Gqsj;
 import cn.jnx.bean.Member;
-import cn.jnx.listener.MemberListener;
+import cn.jnx.listener.GqsjListener;
 import cn.jnx.mapper.SaveExcelDao;
 
 @Controller
@@ -36,8 +39,9 @@ public class WebTest {
 	@PostMapping("/upload")
 	@ResponseBody
 	public String uploadExcel(MultipartFile file) throws IOException {
-		EasyExcel.read(file.getInputStream(), Member.class, new MemberListener(sed)).sheet().doRead();
-        return "success";
+//		EasyExcel.read(file.getInputStream(), Member.class, new MemberListener(sed)).sheet().doRead();
+	    EasyExcel.read(file.getInputStream(), Gqsj.class, new GqsjListener(sed)).sheet().doRead();
+	    return "success";
 	}
 	
 	
@@ -73,4 +77,28 @@ public class WebTest {
         }
         return list;
     }
+    @ResponseBody
+    @PostMapping("/login")
+    public String login(String loginName,String loginPasswd,String f_yhlx,HttpServletRequest request) {
+        Cookie[] cookie = request.getCookies();
+        System.out.println(cookie);
+        request.getSession().setAttribute("username", "张三");
+        request.getSession().setAttribute("user_id", "008");
+        System.out.println("loginName:"+loginName);
+        System.out.println("loginPasswd:"+loginPasswd);
+        System.out.println("f_yhlx:"+f_yhlx);
+        return "success";
+    }
+    
+    @ResponseBody
+    @PostMapping("/uploadDate")
+    public String uploadDate(HttpServletRequest request) {
+        Cookie[] cookie = request.getCookies();
+        System.out.println(cookie);
+        System.out.println("sessionid= "+ request.getSession().getId());
+        System.out.println("user_id= "+ request.getSession().getAttribute("user_id"));
+        System.out.println("username = "+ request.getSession().getAttribute("username"));
+        return "success";
+    }
+    
 }

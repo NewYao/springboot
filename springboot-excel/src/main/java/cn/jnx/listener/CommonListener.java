@@ -31,7 +31,7 @@ public class CommonListener extends AnalysisEventListener<Map<Integer, String>> 
 	/**
 	 * 每隔10条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
 	 */
-	private static final int BATCH_COUNT = 10;
+	private static final int BATCH_COUNT = 3000;
 
 	// 自定义用于暂时存储data。
 	private List<Map<Integer, String>> datas = new ArrayList<Map<Integer, String>>();

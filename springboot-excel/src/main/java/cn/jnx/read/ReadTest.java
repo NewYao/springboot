@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 
+import cn.jnx.bean.Gqsj;
 import cn.jnx.bean.Member;
 import cn.jnx.listener.CommonListener;
+import cn.jnx.listener.GqsjListener;
 import cn.jnx.listener.MemberListener;
 import cn.jnx.mapper.SaveExcelDao;
 import cn.jnx.util.FileUtil;
@@ -21,8 +23,8 @@ public class ReadTest {
 
 	static Logger log = LoggerFactory.getLogger(ReadTest.class);
 
-	String filePath = FileUtil.getFilePath("member.xls");
-
+//	String filePath = FileUtil.getFilePath("member.xls");
+	String filePath = "f://gqsj.xlsx";
 	@Autowired
 	private SaveExcelDao sed;
 	
@@ -37,7 +39,7 @@ public class ReadTest {
 	 * <p>
 	 * 4、相应处理在自定义的监听器中处理
 	 */
-	@Test
+	//@Test
 	public void readExcle() {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
 		EasyExcel.read(filePath, new CommonListener(sed)).sheet().doRead();
@@ -54,7 +56,7 @@ public class ReadTest {
 	 * <p>
 	 * 4、相应处理在自定义的监听器中处理
 	 */
-	@Test
+//	@Test
 	public void readExcleWithModel() {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
 		EasyExcel.read(filePath, Member.class, new MemberListener(sed)).sheet().doRead();
@@ -84,4 +86,12 @@ public class ReadTest {
 		}
 	}
 
+	
+//	@Test
+	public void readExcleWithModel2() {
+        // 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
+        EasyExcel.read(filePath, Gqsj.class, new GqsjListener(sed)).sheet().doRead();
+    }
+	
+	
 }
